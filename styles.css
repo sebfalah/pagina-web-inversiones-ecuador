@@ -1,13 +1,13 @@
-:root {
-  --bg: #f4f7fb;
+﻿:root {
+  --bg: #f3f5f8;
   --surface: #ffffff;
-  --surface-alt: #e8f0ff;
-  --text: #13212f;
-  --muted: #4f6479;
-  --primary: #006d77;
-  --primary-dark: #004c53;
-  --line: #d3dfef;
-  --radius: 16px;
+  --surface-alt: #f8fafc;
+  --text: #121722;
+  --muted: #4b5565;
+  --primary: #c51f2f;
+  --primary-dark: #9f1724;
+  --line: #d8dee8;
+  --radius: 14px;
 }
 
 * {
@@ -19,13 +19,15 @@ body {
   font-family: "Manrope", sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at 10% -10%, #b9d7ff 0%, transparent 45%),
-    radial-gradient(circle at 100% 0%, #ffd9b3 0%, transparent 40%),
+    linear-gradient(145deg, rgba(197, 31, 47, 0.06), transparent 35%),
+    linear-gradient(330deg, rgba(15, 23, 42, 0.04), transparent 40%),
     var(--bg);
   line-height: 1.5;
 }
 
-h1, h2 {
+h1,
+h2,
+h3 {
   margin: 0 0 0.6rem;
   line-height: 1.2;
 }
@@ -36,6 +38,11 @@ p {
 
 .hero {
   padding: 1.2rem 1rem 3rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.page-header {
+  padding-bottom: 2rem;
 }
 
 .nav,
@@ -55,13 +62,30 @@ p {
 
 .logo {
   font-family: "IBM Plex Serif", serif;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .hero-content h1 {
   max-width: 800px;
   font-size: clamp(2rem, 5vw, 3.4rem);
+}
+
+.ib-support {
+  margin-bottom: 0.9rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.ib-support a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.ib-support a:hover {
+  text-decoration: underline;
 }
 
 .kicker {
@@ -74,7 +98,7 @@ p {
 }
 
 .subtitle {
-  max-width: 700px;
+  max-width: 760px;
   color: var(--muted);
   margin-bottom: 1.5rem;
 }
@@ -89,19 +113,20 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 0;
+  border: 1px solid var(--primary);
   text-decoration: none;
-  padding: 0.75rem 1.1rem;
-  border-radius: 999px;
+  padding: 0.72rem 1.1rem;
+  border-radius: 10px;
   font-weight: 700;
   background: var(--primary);
   color: #fff;
   cursor: pointer;
-  transition: transform 0.18s ease, background 0.18s ease;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 
 .btn:hover {
   background: var(--primary-dark);
+  border-color: var(--primary-dark);
   transform: translateY(-1px);
 }
 
@@ -109,6 +134,11 @@ p {
   background: var(--surface);
   color: var(--text);
   border: 1px solid var(--line);
+}
+
+.btn-secondary:hover {
+  background: #f8fafc;
+  border-color: #c8d0dc;
 }
 
 .btn-nav {
@@ -120,7 +150,8 @@ p {
   padding: 1.2rem;
 }
 
-.grid-3 {
+.grid-3,
+.strategy-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
@@ -131,6 +162,7 @@ p {
   border-radius: var(--radius);
   padding: 1.2rem;
   border: 1px solid var(--line);
+  box-shadow: 0 8px 28px rgba(17, 24, 39, 0.04);
 }
 
 .card p {
@@ -162,11 +194,12 @@ p {
   border-bottom: 0;
 }
 
-.form-section {
+.interest-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  align-items: start;
+  gap: 0.8rem;
 }
 
 .lead-form {
@@ -178,13 +211,56 @@ p {
   gap: 0.45rem;
 }
 
+.prospect-form {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 0.72rem;
   font: inherit;
+  background: #fff;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid rgba(197, 31, 47, 0.2);
+  border-color: var(--primary);
+}
+
+.form-group {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.form-group legend {
+  padding: 0 0.3rem;
+  font-weight: 700;
+}
+
+.form-group label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.form-group input {
+  width: auto;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .form-message {
@@ -223,8 +299,8 @@ details p {
 
 @media (max-width: 900px) {
   .grid-3,
-  .split,
-  .form-section {
+  .strategy-grid,
+  .split {
     grid-template-columns: 1fr;
   }
 }

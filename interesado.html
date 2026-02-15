@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estoy interesado | Nexo Capital Ecuador</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero page-header">
+    <nav class="nav">
+      <div class="logo">Nexo Capital Ecuador</div>
+      <a class="btn btn-secondary btn-nav" href="index.html">Volver al inicio</a>
+    </nav>
+    <div class="hero-content">
+      <p class="kicker">Perfil de inversionista</p>
+      <h1>Queremos entender tu perfil antes de proponerte una estrategia</h1>
+      <p class="subtitle">Completa este formulario y te contactaremos con un plan inicial adaptado a tus objetivos y tu apetito de riesgo.</p>
+    </div>
+  </header>
+
+  <main class="section">
+    <form class="lead-form prospect-form" id="prospectForm">
+      <label for="nombre">Nombre completo</label>
+      <input id="nombre" name="nombre" type="text" required>
+
+      <label for="correo">Correo</label>
+      <input id="correo" name="correo" type="email" required>
+
+      <label for="edad">Edad</label>
+      <input id="edad" name="edad" type="number" min="18" max="100" required>
+
+      <label for="riesgo">Apetito de riesgo</label>
+      <select id="riesgo" name="riesgo" required>
+        <option value="">Selecciona una opción</option>
+        <option value="conservador">Conservador</option>
+        <option value="moderado">Moderado</option>
+        <option value="agresivo">Agresivo</option>
+      </select>
+
+      <fieldset class="form-group">
+        <legend>Objetivos de la inversión</legend>
+        <label><input type="checkbox" name="objetivos" value="crecer-capital"> Crecer capital</label>
+        <label><input type="checkbox" name="objetivos" value="preservar-capital"> Preservar capital</label>
+        <label><input type="checkbox" name="objetivos" value="flujo-caja"> Generar flujo de caja</label>
+        <label><input type="checkbox" name="objetivos" value="diversificacion"> Diversificación internacional</label>
+      </fieldset>
+
+      <label for="capital">Monto aproximado a invertir (USD)</label>
+      <input id="capital" name="capital" type="number" min="5000" step="500" required>
+
+      <fieldset class="form-group">
+        <legend>¿Cuenta con cuenta bancaria en EE.UU.?</legend>
+        <label><input type="radio" name="cuentaUsa" value="si" required> Sí</label>
+        <label><input type="radio" name="cuentaUsa" value="no" required> No</label>
+        <p class="hint">No es necesario tener cuenta en EE.UU. para iniciar el proceso.</p>
+      </fieldset>
+
+      <label for="mensaje">Comentarios adicionales</label>
+      <textarea id="mensaje" name="mensaje" rows="4" placeholder="Cuéntanos más sobre tu situación o experiencia invirtiendo"></textarea>
+
+      <button class="btn" type="submit">Enviar perfil</button>
+      <p id="prospectMessage" class="form-message" aria-live="polite"></p>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <p>(c) 2026 Nexo Capital Ecuador. Educación y acompañamiento en inversión internacional.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
