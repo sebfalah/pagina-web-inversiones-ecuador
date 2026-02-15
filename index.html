@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invierte en EE.UU. desde Ecuador</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav">
+      <div class="logo">Capital Puente</div>
+      <a class="btn btn-nav" href="#contacto">Agendar llamada</a>
+    </nav>
+    <div class="hero-content">
+      <p class="kicker">Asesoria para Ecuador</p>
+      <h1>Abre y fondea tu cuenta de inversion en EE.UU. con un plan claro</h1>
+      <p class="subtitle">Guiamos a personas en Ecuador con capital disponible que quieren invertir en mercados de Estados Unidos sin improvisar.</p>
+      <div class="cta-group">
+        <a class="btn" href="#proceso">Ver proceso</a>
+        <a class="btn btn-secondary" href="#faq">Preguntas frecuentes</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section grid-3" id="proceso">
+      <article class="card">
+        <h2>1. Apertura</h2>
+        <p>Te ayudamos a elegir un broker regulado, completar formularios y enviar la documentacion correcta desde Ecuador.</p>
+      </article>
+      <article class="card">
+        <h2>2. Fondeo</h2>
+        <p>Definimos la ruta más eficiente para transferir fondos en USD, con control de costos y tiempos.</p>
+      </article>
+      <article class="card">
+        <h2>3. Inversión</h2>
+        <p>Construimos una cartera inicial segun tu perfil de riesgo y horizonte, con seguimiento mensual.</p>
+      </article>
+    </section>
+
+    <section class="section split">
+      <div>
+        <p class="kicker">Por qué nosotros</p>
+        <h2>Proceso simple, cumplimiento y disciplina</h2>
+        <p>El objetivo es que inviertas en EE.UU. de forma legal, ordenada y sostenible. Sin promesas de rentabilidad irreales.</p>
+      </div>
+      <ul class="checklist">
+        <li>Checklist de onboarding personalizado</li>
+        <li>Guia para transferencias internacionales</li>
+        <li>Estrategia inicial con ETFs y acciones lideres</li>
+        <li>Revision periodica de resultados y ajustes</li>
+      </ul>
+    </section>
+
+    <section class="section form-section" id="contacto">
+      <div>
+        <p class="kicker">Primer paso</p>
+        <h2>Agenda una evaluacion gratuita</h2>
+        <p>Te contactamos para entender tu situacion y definir proximos pasos.</p>
+      </div>
+      <form class="lead-form" id="leadForm">
+        <label for="nombre">Nombre completo</label>
+        <input id="nombre" name="nombre" type="text" required>
+
+        <label for="correo">Correo</label>
+        <input id="correo" name="correo" type="email" required>
+
+        <label for="capital">Capital aproximado a invertir (USD)</label>
+        <input id="capital" name="capital" type="number" min="5000" step="500" required>
+
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" name="mensaje" rows="4" placeholder="Cuentanos tu objetivo"></textarea>
+
+        <button class="btn" type="submit">Enviar</button>
+        <p id="formMessage" class="form-message" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="section faq" id="faq">
+      <p class="kicker">FAQ</p>
+      <h2>Preguntas frecuentes</h2>
+      <details>
+        <summary>Necesito una cuenta bancaria en EE.UU.?</summary>
+        <p>No siempre. En muchos casos se puede iniciar desde Ecuador con transferencias internacionales.</p>
+      </details>
+      <details>
+        <summary>Cual es el monto minimo recomendado?</summary>
+        <p>Depende del broker y la estrategia. Generalmente recomendamos empezar desde USD 5,000 para eficiencia operativa.</p>
+      </details>
+      <details>
+        <summary>Prometen rentabilidades?</summary>
+        <p>No. Trabajamos con gestión de riesgo, diversificación y objetivos realistas.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>(c) 2026 Capital Puente. Educacion y acompanamiento en inversion internacional.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
