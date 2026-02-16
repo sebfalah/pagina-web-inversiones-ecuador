@@ -60,6 +60,12 @@ p {
   margin-bottom: 3rem;
 }
 
+.nav-actions {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+}
+
 .logo {
   font-family: "IBM Plex Serif", serif;
   font-size: 1.2rem;
@@ -157,6 +163,12 @@ p {
   gap: 1rem;
 }
 
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
 .card {
   background: var(--surface);
   border-radius: var(--radius);
@@ -167,6 +179,18 @@ p {
 
 .card p {
   color: var(--muted);
+}
+
+.profile-link {
+  display: inline-block;
+  margin-top: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.profile-link:hover {
+  text-decoration: underline;
 }
 
 .split {
@@ -300,7 +324,14 @@ details p {
 @media (max-width: 900px) {
   .grid-3,
   .strategy-grid,
+  .about-grid,
   .split {
     grid-template-columns: 1fr;
+  }
+
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
 }
