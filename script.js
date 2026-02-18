@@ -58,7 +58,8 @@ if (prospectForm && prospectMessage) {
       const result = await response.json().catch(() => ({ ok: false }));
 
       if (!response.ok || !result.ok) {
-        prospectMessage.textContent = result.message || "No se pudo guardar tu perfil. Intenta nuevamente.";
+        const debugSuffix = result.debug ? ` (${result.debug})` : "";
+        prospectMessage.textContent = (result.message || "No se pudo guardar tu perfil. Intenta nuevamente.") + debugSuffix;
         return;
       }
 
