@@ -72,6 +72,12 @@ try {
         $domainRoot = dirname($documentRoot);
         $configCandidates[] = $domainRoot . '/files/Env/secureConfig.php';
         $configCandidates[] = $domainRoot . '/files/Env/secure_config.php';
+        $homeRoot = dirname($domainRoot);
+        $configCandidates[] = $homeRoot . '/files/Env/secureConfig.php';
+        $configCandidates[] = $homeRoot . '/files/Env/secure_config.php';
+        $accountRoot = dirname($homeRoot);
+        $configCandidates[] = $accountRoot . '/files/Env/secureConfig.php';
+        $configCandidates[] = $accountRoot . '/files/Env/secure_config.php';
     }
 
     $secureConfig = array();
