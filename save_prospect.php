@@ -64,21 +64,17 @@ try {
         exit;
     }
 
-    $configCandidates = array(
-        __DIR__ . '/files/Env/secure_config.php',
-        __DIR__ . '/files/Env/secureConfig.php',
-        dirname(__DIR__) . '/files/Env/secure_config.php',
-        dirname(__DIR__) . '/files/Env/secureConfig.php',
-        dirname(dirname(__DIR__)) . '/files/Env/secure_config.php',
-        dirname(dirname(__DIR__)) . '/files/Env/secureConfig.php',
-        dirname(dirname(dirname(__DIR__))) . '/files/Env/secure_config.php',
-        dirname(dirname(dirname(__DIR__))) . '/files/Env/secureConfig.php',
-    );
+    $documentRoot = isset($_SERVER['DOCUMENT_ROOT']) ? rtrim((string)$_SERVER['DOCUMENT_ROOT'], '/\\') : '';
+    $configCandidates = array();
+    if ($documentRoot !== '') {
+        $configCandidates[] = $documentRoot . '/files/Env/secureConfig.php';
+        $configCandidates[] = $documentRoot . '/files/Env/secure_config.php';
+    }
 
     $secureConfig = array();
     $loadedConfigPath = '';
     foreach ($configCandidates as $candidatePath) {
-        if (file_exists($candidatePath)) {
+        if (is_readable($candidatePath)) {
             $loaded = require $candidatePath;
             if (is_array($loaded)) {
                 $secureConfig = $loaded;
@@ -121,6 +117,7 @@ try {
             'ok' => false,
             'message' => 'Configuracion de base de datos incompleta: ' . implode(', ', $missingDbKeys),
             'config_file' => $loadedConfigPath === '' ? 'no encontrado' : $loadedConfigPath,
+            'document_root' => $documentRoot === '' ? 'vacio' : $documentRoot,
         ));
         exit;
     }

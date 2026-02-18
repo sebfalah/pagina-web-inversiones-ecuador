@@ -65,7 +65,8 @@ if (prospectForm && prospectMessage) {
 
         if (result && result.message) {
           const configInfo = result.config_file ? ` [config: ${result.config_file}]` : "";
-          prospectMessage.textContent = `${result.message}${configInfo}`;
+          const rootInfo = result.document_root ? ` [docroot: ${result.document_root}]` : "";
+          prospectMessage.textContent = `${result.message}${configInfo}${rootInfo}`;
           return;
         }
 
