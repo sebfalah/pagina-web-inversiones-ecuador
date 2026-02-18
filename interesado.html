@@ -22,6 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -94,6 +95,8 @@
 
       <label for="mensaje">Comentarios adicionales</label>
       <textarea id="mensaje" name="mensaje" rows="4" placeholder="Cuéntanos más sobre tu situación o experiencia invirtiendo"></textarea>
+
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAACfQHIzI8v18kjkP" data-theme="light"></div>
 
       <button class="btn" type="submit">Enviar perfil</button>
       <p id="prospectMessage" class="form-message" aria-live="polite"></p>

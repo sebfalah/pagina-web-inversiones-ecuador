@@ -1,10 +1,5 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-header('X-Content-Type-Options: nosniff');
-header('X-Frame-Options: DENY');
-header('Referrer-Policy: strict-origin-when-cross-origin');
-header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'; base-uri 'none'");
-header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 
 $debug = false;
 
@@ -21,49 +16,10 @@ function post_value($key, $default = '')
     return isset($_POST[$key]) ? $_POST[$key] : $default;
 }
 
-function request_host_from($value)
-{
-    if (!$value) {
-        return '';
-    }
-
-    $host = parse_url($value, PHP_URL_HOST);
-    if (!is_string($host)) {
-        return '';
-    }
-
-    return strtolower($host);
-}
-
 try {
     if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(405);
         echo json_encode(array('ok' => false, 'message' => 'Metodo no permitido'));
-        exit;
-    }
-
-    // Anti-CSRF basico por origen.
-    $allowedHosts = array('nexoecuador.com', 'www.nexoecuador.com');
-    $originHost = request_host_from(isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '');
-    $refererHost = request_host_from(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
-
-    if ($originHost !== '' && !in_array($originHost, $allowedHosts, true)) {
-        http_response_code(403);
-        echo json_encode(array('ok' => false, 'message' => 'Origen no permitido'));
-        exit;
-    }
-
-    if ($originHost === '' && $refererHost !== '' && !in_array($refererHost, $allowedHosts, true)) {
-        http_response_code(403);
-        echo json_encode(array('ok' => false, 'message' => 'Origen no permitido'));
-        exit;
-    }
-
-    // Honeypot anti-bot.
-    $website = trim((string)post_value('website', ''));
-    if ($website !== '') {
-        http_response_code(422);
-        echo json_encode(array('ok' => false, 'message' => 'Solicitud invalida'));
         exit;
     }
 
@@ -161,21 +117,6 @@ try {
             PDO::ATTR_EMULATE_PREPARES => false,
         )
     );
-
-    // Limite basico: max 8 envios por IP en 10 minutos.
-    if ($ipAddress !== null && $ipAddress !== '') {
-        $rateStmt = $pdo->prepare(
-            'SELECT COUNT(*) FROM prospectos WHERE ip_address = :ip_address AND created_at >= (NOW() - INTERVAL 10 MINUTE)'
-        );
-        $rateStmt->execute(array(':ip_address' => $ipAddress));
-        $attempts = (int)$rateStmt->fetchColumn();
-
-        if ($attempts >= 8) {
-            http_response_code(429);
-            echo json_encode(array('ok' => false, 'message' => 'Demasiados intentos. Intenta en unos minutos.'));
-            exit;
-        }
-    }
 
     $stmt = $pdo->prepare(
         'INSERT INTO prospectos (nombre, correo, edad, riesgo, objetivos, capital, cuenta_usa, mensaje, ip_address, user_agent)
