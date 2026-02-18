@@ -69,6 +69,9 @@ try {
     if ($documentRoot !== '') {
         $configCandidates[] = $documentRoot . '/files/Env/secureConfig.php';
         $configCandidates[] = $documentRoot . '/files/Env/secure_config.php';
+        $domainRoot = dirname($documentRoot);
+        $configCandidates[] = $domainRoot . '/files/Env/secureConfig.php';
+        $configCandidates[] = $domainRoot . '/files/Env/secure_config.php';
     }
 
     $secureConfig = array();
