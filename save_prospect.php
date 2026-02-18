@@ -66,7 +66,7 @@ try {
 
     $documentRoot = isset($_SERVER['DOCUMENT_ROOT']) ? rtrim((string)$_SERVER['DOCUMENT_ROOT'], '/\\') : '';
     $domainRoot = $documentRoot !== '' ? dirname($documentRoot) : '';
-    $configPath = $domainRoot !== '' ? $domainRoot . '/files/Env/secureConfig.php' : '';
+    $configPath = $domainRoot !== '' ? $domainRoot . '/Env/secureConfig.php' : '';
 
     $secureConfig = array();
     $loadedConfigPath = '';
