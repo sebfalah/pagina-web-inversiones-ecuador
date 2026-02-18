@@ -64,7 +64,8 @@ if (prospectForm && prospectMessage) {
         }
 
         if (result && result.message) {
-          prospectMessage.textContent = result.message;
+          const configInfo = result.config_file ? ` [config: ${result.config_file}]` : "";
+          prospectMessage.textContent = `${result.message}${configInfo}`;
           return;
         }
 

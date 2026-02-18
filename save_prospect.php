@@ -64,10 +64,27 @@ try {
         exit;
     }
 
-    $configPathA = dirname(__DIR__) . '/files/Env/secure_config.php';
-    $configPathB = dirname(__DIR__) . '/files/Env/secureConfig.php';
-    $configPath = file_exists($configPathA) ? $configPathA : $configPathB;
-    $secureConfig = file_exists($configPath) ? require $configPath : array();
+    $configCandidates = array(
+        dirname(__DIR__) . '/files/Env/secure_config.php',
+        dirname(__DIR__) . '/files/Env/secureConfig.php',
+        dirname(dirname(__DIR__)) . '/files/Env/secure_config.php',
+        dirname(dirname(__DIR__)) . '/files/Env/secureConfig.php',
+        dirname(dirname(dirname(__DIR__))) . '/files/Env/secure_config.php',
+        dirname(dirname(dirname(__DIR__))) . '/files/Env/secureConfig.php',
+    );
+
+    $secureConfig = array();
+    $loadedConfigPath = '';
+    foreach ($configCandidates as $candidatePath) {
+        if (file_exists($candidatePath)) {
+            $loaded = require $candidatePath;
+            if (is_array($loaded)) {
+                $secureConfig = $loaded;
+                $loadedConfigPath = $candidatePath;
+                break;
+            }
+        }
+    }
 
     $host = (is_array($secureConfig) && isset($secureConfig['DB_HOST']) && is_string($secureConfig['DB_HOST']))
         ? trim($secureConfig['DB_HOST'])
@@ -82,9 +99,27 @@ try {
         ? $secureConfig['DB_PASS']
         : '';
 
-    if ($host === '' || $dbName === '' || $dbUser === '' || $dbPass === '') {
+    $missingDbKeys = array();
+    if ($host === '') {
+        $missingDbKeys[] = 'DB_HOST';
+    }
+    if ($dbName === '') {
+        $missingDbKeys[] = 'DB_NAME';
+    }
+    if ($dbUser === '') {
+        $missingDbKeys[] = 'DB_USER';
+    }
+    if ($dbPass === '') {
+        $missingDbKeys[] = 'DB_PASS';
+    }
+
+    if (count($missingDbKeys) > 0) {
         http_response_code(500);
-        echo json_encode(array('ok' => false, 'message' => 'Configuracion de base de datos incompleta'));
+        echo json_encode(array(
+            'ok' => false,
+            'message' => 'Configuracion de base de datos incompleta: ' . implode(', ', $missingDbKeys),
+            'config_file' => $loadedConfigPath === '' ? 'no encontrado' : $loadedConfigPath,
+        ));
         exit;
     }
 
