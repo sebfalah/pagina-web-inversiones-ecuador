@@ -127,6 +127,7 @@ try {
             'message' => 'Configuracion de base de datos incompleta: ' . implode(', ', $missingDbKeys),
             'config_file' => $loadedConfigPath === '' ? 'no encontrado' : $loadedConfigPath,
             'document_root' => $documentRoot === '' ? 'vacio' : $documentRoot,
+            'tried_paths' => $configCandidates,
         ));
         exit;
     }
