@@ -31,7 +31,6 @@ if (prospectForm && prospectMessage) {
     const edad = Number(data.get("edad"));
     const capital = Number(data.get("capital"));
     const objetivos = data.getAll("objetivos[]").concat(data.getAll("objetivos"));
-    const turnstileToken = (data.get("cf-turnstile-response") || "").toString().trim();
 
     if (!edad || edad < 18 || edad > 100) {
       prospectMessage.textContent = "Ingresa una edad valida entre 18 y 100 anos.";
@@ -45,11 +44,6 @@ if (prospectForm && prospectMessage) {
 
     if (!capital || capital < 5000) {
       prospectMessage.textContent = "El monto minimo sugerido para iniciar es USD 5,000.";
-      return;
-    }
-
-    if (!turnstileToken) {
-      prospectMessage.textContent = "No se pudo validar anti-bot. Recarga la pagina e intenta nuevamente.";
       return;
     }
 

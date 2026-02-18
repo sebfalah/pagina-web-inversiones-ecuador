@@ -64,7 +64,9 @@ try {
         exit;
     }
 
-    $configPath = dirname(__DIR__) . '/files/Env/secure_config.php';
+    $configPathA = dirname(__DIR__) . '/files/Env/secure_config.php';
+    $configPathB = dirname(__DIR__) . '/files/Env/secureConfig.php';
+    $configPath = file_exists($configPathA) ? $configPathA : $configPathB;
     $secureConfig = file_exists($configPath) ? require $configPath : array();
 
     $host = (is_array($secureConfig) && isset($secureConfig['DB_HOST']) && is_string($secureConfig['DB_HOST']))
@@ -89,6 +91,13 @@ try {
     $turnstileSecretKey = '';
     if (is_array($secureConfig) && isset($secureConfig['TURNSTILE_SECRET_KEY']) && is_string($secureConfig['TURNSTILE_SECRET_KEY'])) {
         $turnstileSecretKey = trim($secureConfig['TURNSTILE_SECRET_KEY']);
+    }
+    $turnstileEnabled = true;
+    if (is_array($secureConfig) && isset($secureConfig['TURNSTILE_ENABLED'])) {
+        $parsedToggle = filter_var($secureConfig['TURNSTILE_ENABLED'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        if ($parsedToggle !== null) {
+            $turnstileEnabled = $parsedToggle;
+        }
     }
 
     $nombre = trim((string)post_value('nombre', ''));
@@ -177,22 +186,24 @@ try {
         exit;
     }
 
-    if ($turnstileSecretKey === '') {
-        http_response_code(500);
-        echo json_encode(array('ok' => false, 'message' => 'Configuracion anti-bot incompleta'));
-        exit;
-    }
+    if ($turnstileEnabled) {
+        if ($turnstileSecretKey === '') {
+            http_response_code(500);
+            echo json_encode(array('ok' => false, 'message' => 'Configuracion anti-bot incompleta'));
+            exit;
+        }
 
-    if ($turnstileToken === '') {
-        http_response_code(422);
-        echo json_encode(array('ok' => false, 'message' => 'Completa la verificacion anti-bot'));
-        exit;
-    }
+        if ($turnstileToken === '') {
+            http_response_code(422);
+            echo json_encode(array('ok' => false, 'message' => 'Completa la verificacion anti-bot'));
+            exit;
+        }
 
-    if (!verify_turnstile_token($turnstileSecretKey, $turnstileToken, $ipAddress)) {
-        http_response_code(422);
-        echo json_encode(array('ok' => false, 'message' => 'Verificacion anti-bot fallida'));
-        exit;
+        if (!verify_turnstile_token($turnstileSecretKey, $turnstileToken, $ipAddress)) {
+            http_response_code(422);
+            echo json_encode(array('ok' => false, 'message' => 'Verificacion anti-bot fallida'));
+            exit;
+        }
     }
 
     $pdo = new PDO(
