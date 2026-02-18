@@ -65,6 +65,8 @@ try {
     }
 
     $configCandidates = array(
+        __DIR__ . '/files/Env/secure_config.php',
+        __DIR__ . '/files/Env/secureConfig.php',
         dirname(__DIR__) . '/files/Env/secure_config.php',
         dirname(__DIR__) . '/files/Env/secureConfig.php',
         dirname(dirname(__DIR__)) . '/files/Env/secure_config.php',
