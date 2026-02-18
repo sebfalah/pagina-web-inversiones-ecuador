@@ -30,7 +30,7 @@ if (prospectForm && prospectMessage) {
     const data = new FormData(prospectForm);
     const edad = Number(data.get("edad"));
     const capital = Number(data.get("capital"));
-    const objetivos = data.getAll("objetivos");
+    const objetivos = data.getAll("objetivos[]").concat(data.getAll("objetivos"));
 
     if (!edad || edad < 18 || edad > 100) {
       prospectMessage.textContent = "Ingresa una edad valida entre 18 y 100 anos.";
