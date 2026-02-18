@@ -55,27 +55,27 @@ if (prospectForm && prospectMessage) {
         body: data,
       });
 
-      const raw = await response.text();
-      let result = null;
-
-      try {
-        result = JSON.parse(raw);
-      } catch (parseError) {
-        result = null;
-      }
+      const result = await response.json().catch(() => null);
 
       if (!response.ok || !result || !result.ok) {
-        const message = result?.message || "No se pudo guardar tu perfil. Intenta nuevamente.";
-        const debug = result?.debug || `HTTP ${response.status} ${response.statusText}`;
-        const rawSnippet = !result && raw ? ` | Respuesta: ${raw.substring(0, 180)}` : "";
-        prospectMessage.textContent = `${message} (${debug})${rawSnippet}`;
+        if (response.status === 429) {
+          prospectMessage.textContent = "Demasiados intentos. Intenta nuevamente en unos minutos.";
+          return;
+        }
+
+        if (result && result.message && response.status >= 400 && response.status < 500) {
+          prospectMessage.textContent = result.message;
+          return;
+        }
+
+        prospectMessage.textContent = "No se pudo guardar tu perfil. Intenta nuevamente.";
         return;
       }
 
       prospectMessage.textContent = "Gracias. Tu perfil fue guardado y te contactaremos con una propuesta inicial.";
       prospectForm.reset();
     } catch (error) {
-      prospectMessage.textContent = `Error de conexion. Verifica el servidor e intenta nuevamente. (${error.message})`;
+      prospectMessage.textContent = "Error de conexion. Verifica el servidor e intenta nuevamente.";
     }
   });
 }
