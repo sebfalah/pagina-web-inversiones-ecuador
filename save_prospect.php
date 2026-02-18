@@ -69,12 +69,10 @@ try {
     $configPath = $domainRoot !== '' ? $domainRoot . '/Env/secureConfig.php' : '';
 
     $secureConfig = array();
-    $loadedConfigPath = '';
     if ($configPath !== '' && is_readable($configPath)) {
         $loaded = require $configPath;
         if (is_array($loaded)) {
             $secureConfig = $loaded;
-            $loadedConfigPath = $configPath;
         }
     }
 
@@ -109,10 +107,7 @@ try {
         http_response_code(500);
         echo json_encode(array(
             'ok' => false,
-            'message' => 'Configuracion de base de datos incompleta: ' . implode(', ', $missingDbKeys),
-            'config_file' => $loadedConfigPath === '' ? 'no encontrado' : $loadedConfigPath,
-            'document_root' => $documentRoot === '' ? 'vacio' : $documentRoot,
-            'tried_paths' => $configPath === '' ? array() : array($configPath),
+            'message' => 'Configuracion de base de datos incompleta',
         ));
         exit;
     }

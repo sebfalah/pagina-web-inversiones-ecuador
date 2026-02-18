@@ -64,12 +64,7 @@ if (prospectForm && prospectMessage) {
         }
 
         if (result && result.message) {
-          const configInfo = result.config_file ? ` [config: ${result.config_file}]` : "";
-          const rootInfo = result.document_root ? ` [docroot: ${result.document_root}]` : "";
-          const pathInfo = Array.isArray(result.tried_paths) && result.tried_paths.length > 0
-            ? ` [probe: ${result.tried_paths[0]}]`
-            : "";
-          prospectMessage.textContent = `${result.message}${configInfo}${rootInfo}${pathInfo}`;
+          prospectMessage.textContent = result.message;
           return;
         }
 
