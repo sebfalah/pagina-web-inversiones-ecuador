@@ -16,6 +16,47 @@ function post_value($key, $default = '')
     return isset($_POST[$key]) ? $_POST[$key] : $default;
 }
 
+function verify_turnstile_token($secretKey, $token, $remoteIp)
+{
+    if ($secretKey === '' || $token === '') {
+        return false;
+    }
+
+    $payload = http_build_query(array(
+        'secret' => $secretKey,
+        'response' => $token,
+        'remoteip' => $remoteIp,
+    ));
+
+    $rawResponse = false;
+    if (function_exists('curl_init')) {
+        $ch = curl_init('https://challenges.cloudflare.com/turnstile/v0/siteverify');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        $rawResponse = curl_exec($ch);
+        curl_close($ch);
+    } else {
+        $context = stream_context_create(array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'content' => $payload,
+                'timeout' => 10,
+            ),
+        ));
+        $rawResponse = @file_get_contents('https://challenges.cloudflare.com/turnstile/v0/siteverify', false, $context);
+    }
+
+    if ($rawResponse === false) {
+        return false;
+    }
+
+    $decoded = json_decode($rawResponse, true);
+    return is_array($decoded) && !empty($decoded['success']);
+}
+
 try {
     if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(405);
@@ -23,11 +64,32 @@ try {
         exit;
     }
 
-    // Ajusta estos 4 valores con los de tu hosting.
-    $host = 'localhost';
-    $dbName = 'u174757005_nexo';
-    $dbUser = 'u174757005_sfalah_nexo';
-    $dbPass = 'Yorke1986!';
+    $configPath = dirname(__DIR__) . '/files/Env/secure_config.php';
+    $secureConfig = file_exists($configPath) ? require $configPath : array();
+
+    $host = (is_array($secureConfig) && isset($secureConfig['DB_HOST']) && is_string($secureConfig['DB_HOST']))
+        ? trim($secureConfig['DB_HOST'])
+        : '';
+    $dbName = (is_array($secureConfig) && isset($secureConfig['DB_NAME']) && is_string($secureConfig['DB_NAME']))
+        ? trim($secureConfig['DB_NAME'])
+        : '';
+    $dbUser = (is_array($secureConfig) && isset($secureConfig['DB_USER']) && is_string($secureConfig['DB_USER']))
+        ? trim($secureConfig['DB_USER'])
+        : '';
+    $dbPass = (is_array($secureConfig) && isset($secureConfig['DB_PASS']) && is_string($secureConfig['DB_PASS']))
+        ? $secureConfig['DB_PASS']
+        : '';
+
+    if ($host === '' || $dbName === '' || $dbUser === '' || $dbPass === '') {
+        http_response_code(500);
+        echo json_encode(array('ok' => false, 'message' => 'Configuracion de base de datos incompleta'));
+        exit;
+    }
+
+    $turnstileSecretKey = '';
+    if (is_array($secureConfig) && isset($secureConfig['TURNSTILE_SECRET_KEY']) && is_string($secureConfig['TURNSTILE_SECRET_KEY'])) {
+        $turnstileSecretKey = trim($secureConfig['TURNSTILE_SECRET_KEY']);
+    }
 
     $nombre = trim((string)post_value('nombre', ''));
     $correo = trim((string)post_value('correo', ''));
@@ -106,6 +168,32 @@ try {
 
     $ipAddress = isset($_SERVER['REMOTE_ADDR']) ? substr((string)$_SERVER['REMOTE_ADDR'], 0, 45) : null;
     $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? substr((string)$_SERVER['HTTP_USER_AGENT'], 0, 255) : null;
+    $honeypot = trim((string)post_value('website', ''));
+    $turnstileToken = trim((string)post_value('cf-turnstile-response', ''));
+
+    if ($honeypot !== '') {
+        http_response_code(422);
+        echo json_encode(array('ok' => false, 'message' => 'Solicitud invalida'));
+        exit;
+    }
+
+    if ($turnstileSecretKey === '') {
+        http_response_code(500);
+        echo json_encode(array('ok' => false, 'message' => 'Configuracion anti-bot incompleta'));
+        exit;
+    }
+
+    if ($turnstileToken === '') {
+        http_response_code(422);
+        echo json_encode(array('ok' => false, 'message' => 'Completa la verificacion anti-bot'));
+        exit;
+    }
+
+    if (!verify_turnstile_token($turnstileSecretKey, $turnstileToken, $ipAddress)) {
+        http_response_code(422);
+        echo json_encode(array('ok' => false, 'message' => 'Verificacion anti-bot fallida'));
+        exit;
+    }
 
     $pdo = new PDO(
         "mysql:host={$host};dbname={$dbName};charset=utf8mb4",
