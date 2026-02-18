@@ -11,7 +11,7 @@ if (leadForm && formMessage) {
     const capital = Number(data.get("capital"));
 
     if (!nombre || !correo || !capital || capital < 5000) {
-      formMessage.textContent = "Revisa los datos. El capital mínimo sugerido es USD 5,000.";
+      formMessage.textContent = "Revisa los datos. El capital minimo sugerido es USD 5,000.";
       return;
     }
 
@@ -24,7 +24,7 @@ const prospectForm = document.getElementById("prospectForm");
 const prospectMessage = document.getElementById("prospectMessage");
 
 if (prospectForm && prospectMessage) {
-  prospectForm.addEventListener("submit", (event) => {
+  prospectForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const data = new FormData(prospectForm);
@@ -33,21 +33,39 @@ if (prospectForm && prospectMessage) {
     const objetivos = data.getAll("objetivos");
 
     if (!edad || edad < 18 || edad > 100) {
-      prospectMessage.textContent = "Ingresa una edad válida entre 18 y 100 años.";
+      prospectMessage.textContent = "Ingresa una edad valida entre 18 y 100 anos.";
       return;
     }
 
     if (objetivos.length === 0) {
-      prospectMessage.textContent = "Selecciona al menos un objetivo de inversión.";
+      prospectMessage.textContent = "Selecciona al menos un objetivo de inversion.";
       return;
     }
 
     if (!capital || capital < 5000) {
-      prospectMessage.textContent = "El monto mínimo sugerido para iniciar es USD 5,000.";
+      prospectMessage.textContent = "El monto minimo sugerido para iniciar es USD 5,000.";
       return;
     }
 
-    prospectMessage.textContent = "Gracias. Recibimos tu perfil y te contactaremos con una propuesta inicial.";
-    prospectForm.reset();
+    prospectMessage.textContent = "Enviando perfil...";
+
+    try {
+      const response = await fetch("save_prospect.php", {
+        method: "POST",
+        body: data,
+      });
+
+      const result = await response.json().catch(() => ({ ok: false }));
+
+      if (!response.ok || !result.ok) {
+        prospectMessage.textContent = result.message || "No se pudo guardar tu perfil. Intenta nuevamente.";
+        return;
+      }
+
+      prospectMessage.textContent = "Gracias. Tu perfil fue guardado y te contactaremos con una propuesta inicial.";
+      prospectForm.reset();
+    } catch (error) {
+      prospectMessage.textContent = "Error de conexion. Verifica el servidor e intenta nuevamente.";
+    }
   });
 }
