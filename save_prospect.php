@@ -65,31 +65,16 @@ try {
     }
 
     $documentRoot = isset($_SERVER['DOCUMENT_ROOT']) ? rtrim((string)$_SERVER['DOCUMENT_ROOT'], '/\\') : '';
-    $configCandidates = array();
-    if ($documentRoot !== '') {
-        $configCandidates[] = $documentRoot . '/files/Env/secureConfig.php';
-        $configCandidates[] = $documentRoot . '/files/Env/secure_config.php';
-        $domainRoot = dirname($documentRoot);
-        $configCandidates[] = $domainRoot . '/files/Env/secureConfig.php';
-        $configCandidates[] = $domainRoot . '/files/Env/secure_config.php';
-        $homeRoot = dirname($domainRoot);
-        $configCandidates[] = $homeRoot . '/files/Env/secureConfig.php';
-        $configCandidates[] = $homeRoot . '/files/Env/secure_config.php';
-        $accountRoot = dirname($homeRoot);
-        $configCandidates[] = $accountRoot . '/files/Env/secureConfig.php';
-        $configCandidates[] = $accountRoot . '/files/Env/secure_config.php';
-    }
+    $domainRoot = $documentRoot !== '' ? dirname($documentRoot) : '';
+    $configPath = $domainRoot !== '' ? $domainRoot . '/files/Env/secureConfig.php' : '';
 
     $secureConfig = array();
     $loadedConfigPath = '';
-    foreach ($configCandidates as $candidatePath) {
-        if (is_readable($candidatePath)) {
-            $loaded = require $candidatePath;
-            if (is_array($loaded)) {
-                $secureConfig = $loaded;
-                $loadedConfigPath = $candidatePath;
-                break;
-            }
+    if ($configPath !== '' && is_readable($configPath)) {
+        $loaded = require $configPath;
+        if (is_array($loaded)) {
+            $secureConfig = $loaded;
+            $loadedConfigPath = $configPath;
         }
     }
 
@@ -127,7 +112,7 @@ try {
             'message' => 'Configuracion de base de datos incompleta: ' . implode(', ', $missingDbKeys),
             'config_file' => $loadedConfigPath === '' ? 'no encontrado' : $loadedConfigPath,
             'document_root' => $documentRoot === '' ? 'vacio' : $documentRoot,
-            'tried_paths' => $configCandidates,
+            'tried_paths' => $configPath === '' ? array() : array($configPath),
         ));
         exit;
     }
