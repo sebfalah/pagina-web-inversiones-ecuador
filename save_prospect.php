@@ -9,10 +9,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$host = getenv('DB_HOST') ?: '127.0.0.1';
-$dbName = getenv('DB_NAME') ?: 'nexo_capital';
-$dbUser = getenv('DB_USER') ?: 'root';
-$dbPass = getenv('DB_PASS') ?: '';
+$host = getenv('DB_HOST') ?: 'localhost';
+$dbName = getenv('DB_NAME') ?: 'u174757005_nexo';
+$dbUser = getenv('DB_USER') ?: 'u174757005_sfalah_nexo';
+$dbPass = getenv('DB_PASS') ?: 'Yorke1986!';
 
 $nombre = trim((string)($_POST['nombre'] ?? ''));
 $correo = trim((string)($_POST['correo'] ?? ''));
