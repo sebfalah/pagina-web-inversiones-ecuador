@@ -199,19 +199,27 @@ p {
   padding: 1.2rem;
   background: transparent;
 }
-.profile-hero > h1 {
-  grid-column: 2;
-  padding-top: 2.5rem;
+.profile-hero {
+  align-items: start;
+  grid-template-areas:
+    "kicker title"
+    "video title"
+    "subtitle title";
 }
 
-.profile-media-column {
-  grid-column: 1;
-  display: grid;
-  gap: 1rem;
-  align-content: start;
+.profile-kicker {
+  grid-area: kicker;
+  margin-bottom: 0;
+}
+
+.profile-title {
+  grid-area: title;
+  padding-top: 2.5rem;
+  margin: 0;
 }
 
 .profile-intro-video {
+  grid-area: video;
   width: 100%;
   max-width: 720px;
   aspect-ratio: 16 / 9;
@@ -221,6 +229,12 @@ p {
   border: 1px solid var(--line);
   box-shadow: 0 10px 24px rgba(16, 25, 40, 0.08);
   background: #000;
+}
+
+.profile-subtitle {
+  grid-area: subtitle;
+  max-width: 720px;
+  margin-bottom: 0;
 }
 .hero-content > :not(.hero-content-media):not(.hero-content-overlay) {
   position: relative;
@@ -521,9 +535,18 @@ details p {
   font-size: 0.95rem;
 }
 @media (max-width: 900px) {
-  .profile-hero > h1 {
-    grid-column: 1;
+  .interest-page .profile-hero {
+    grid-template-areas:
+      "kicker"
+      "title"
+      "video"
+      "subtitle";
+    gap: 0.9rem;
+  }
+
+  .interest-page .profile-title {
     padding-top: 0;
+    font-size: clamp(1.9rem, 9vw, 2.5rem);
   }
 
   .hero-content,
