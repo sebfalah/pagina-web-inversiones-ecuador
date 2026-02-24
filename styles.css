@@ -379,6 +379,29 @@ p {
   margin-top: 1rem;
 }
 
+.process-card {
+  padding: 1rem;
+}
+
+.process-card-body {
+  display: grid;
+  grid-template-columns: 1fr clamp(90px, 32%, 122px);
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.process-copy h2 {
+  margin-bottom: 0.4rem;
+}
+
+.process-illustration {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  object-fit: cover;
+  display: block;
+}
+
 .about-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
